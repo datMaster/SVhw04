@@ -1,6 +1,9 @@
 package com.svtask.adapters;
 
 import java.util.ArrayList;
+
+import com.svtask.db.DBitem;
+import com.svtask.db.DBworker;
 import com.svtask.utils.SettingsViewHolder;
 import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
@@ -28,11 +31,17 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	private SharedPreferencesWorker sharePreferences;
 	private Context context;
 	
+	private DBworker dbWorker;
+	private ArrayList<DBitem> dbItems;
+	
 	public SettingsItemsAdapter(Context context, SharedPreferencesWorker sharePreferences) {
 
 		this.context =  context;
 		inflater = (LayoutInflater) this.context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);		
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		dbWorker = new DBworker(this.context);
+		dbItems = dbWorker.getAllConvertedRecords();
+		
 		this.sharePreferences = sharePreferences;
 		words = this.context.getResources().getTextArray(R.array.words);
 		holderList = new ArrayList<SettingsViewHolder>();
