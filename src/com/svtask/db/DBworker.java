@@ -34,7 +34,8 @@ public class DBworker extends SQLiteOpenHelper {
 	}
 
 	private void insertNewRecord(ContentValues content) {
-		dataBase.insert(DBconstants.TABLE_NAME, null, content);
+		long result = dataBase.insert(DBconstants.TABLE_NAME, null, content);
+		int cc = 2;
 	}
 
 	public void addRecord(DBitem newItem) {

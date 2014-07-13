@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/new_word"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText_new_word"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView_word_long_click_dialog"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button_cancel"
+            android:id="@+id/button_cancel_long_click_dialog"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -28,13 +26,22 @@
             android:text="@string/button_cancel" />
 
         <Button
-            android:id="@+id/button_add"
+            android:id="@+id/button_edit_long_click_dialog"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/white"
-            android:text="@string/button_add" />
+            android:text="@string/button_edit" />
+
+        <Button
+            android:id="@+id/button_delete_long_click_dialog"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:text="@string/button_delete" />
 
     </LinearLayout>
 

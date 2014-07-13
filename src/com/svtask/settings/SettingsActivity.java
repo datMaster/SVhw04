@@ -57,7 +57,7 @@ public class SettingsActivity extends ActionBarActivity {
 		
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-			settingsAdapter.saveSharedPreferences();
+			settingsAdapter.saveWordsToDB();
 			finish();
 			break;
 		}
@@ -80,7 +80,7 @@ public class SettingsActivity extends ActionBarActivity {
 	
 	@Override
 	public void onBackPressed() {	   
-		settingsAdapter.saveSharedPreferences();
+		settingsAdapter.saveWordsToDB();
 		finish();
 	}
 

@@ -13,6 +13,8 @@ public class AddWordDialog {
 	private Dialog dialog;
 	private Context context;
 	private EditText newWord;
+	private boolean editFlag;
+	private int itemId;
 	
 	public Button button_add;
 	public Button button_cancel;
@@ -33,6 +35,14 @@ public class AddWordDialog {
 							
 	}
 	
+	public void setEditFlag(boolean flag) {
+		editFlag = flag;
+	}
+	
+	public boolean getEditFlag() {
+		return editFlag;
+	}
+	
 	public String getWord() {
 		if(newWord.getText().toString() == null) {
 			Toast.makeText(context, "Word is null", Toast.LENGTH_LONG).show();
@@ -48,6 +58,22 @@ public class AddWordDialog {
 	
 	private void clearInput() {
 		newWord.setText("");
+	}
+	
+	public void setTitle(String title) {
+		dialog.setTitle(title);
+	}
+	
+	public void setWord(String word) {
+		newWord.setText(word);
+	}
+	
+	public void setItemId(int id) {
+		itemId = id;
+	}
+	
+	public int getItemId() {
+		return itemId;
 	}
 		
 }
