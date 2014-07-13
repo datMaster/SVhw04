@@ -46,7 +46,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		words = this.context.getResources().getTextArray(R.array.words);
 		holderList = new ArrayList<SettingsViewHolder>();
 		chBoxStatusList = new ArrayList<Boolean>();	
-		selectAllCount = words.length + (((words.length - 1) * words.length) / 2);
+		int wordsCount = dbItems.size();
+		selectAllCount = wordsCount + (((wordsCount - 1) * wordsCount) / 2);
 		
 		for (int i = 0; i < words.length; i++) {			
 			holderList.add(new SettingsViewHolder());
@@ -83,10 +84,10 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		SettingsViewHolder holder = holderList.get(position);		
 				
 		holder.tvWord = (TextView)convertView.findViewById(R.id.textView_item);		
-		holder.tvWord.setText(words[position]);
+		holder.tvWord.setText(dbItems.get(position).word);// words[position]);
 		
 		holder.chBox = (CheckBox)convertView.findViewById(R.id.checkBox_active_word);
-		holder.chBox.setChecked(chBoxStatusList.get(position));
+		holder.chBox.setChecked(dbItems.get(position).status); //chBoxStatusList.get(position));
 		holder.chBox.setTag(position);		
 		holder.chBox.setOnClickListener(this);	
 		
@@ -97,7 +98,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	public void onClick(View v) {
 		int id = Integer.parseInt(v.getTag().toString());		
 		SettingsViewHolder holder = holderList.get(id);		
-		chBoxStatusList.set(id, holder.chBox.isChecked());
+//		chBoxStatusList.set(id, holder.chBox.isChecked());
+		dbItems.get(id).status = holder.chBox.isChecked();
 		if(holder.chBox.isChecked()) {			
 			selectedCount += (id + 1);
 		}
@@ -123,7 +125,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 			if (holder.chBox != null) {
 				holder.chBox.setChecked(false);
 			}
-			chBoxStatusList.set(i, false);
+//			chBoxStatusList.set(i, false);
+			dbItems.get(i).status = false;
 		}
 		selectedCount = 0;
 	}
@@ -137,7 +140,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 				if (holder.chBox != null) {
 					holder.chBox.setChecked(true);
 				}
-				chBoxStatusList.set(i, true);
+//				chBoxStatusList.set(i, true);
+				dbItems.get(i).status = true;
 			}
 			selectedCount = selectAllCount;
 		}
@@ -149,14 +153,16 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	}
 	
 	public void saveSharedPreferences() {
-		sharePreferences.saveSharedPreferences(chBoxStatusList);
+//		sharePreferences.saveSharedPreferences(chBoxStatusList);
+		dbWorker.updateCheckedStatus(dbItems);
 	}
 	
 	public void loadSharedPreferences() {
-		ArrayList<Integer> allowedIndexes = sharePreferences.getAllowedWords();						
-		for(int index = 0; index < allowedIndexes.size(); index ++) {			
-			chBoxStatusList.set(allowedIndexes.get(index), true);
-			selectedCount += allowedIndexes.get(index) + 1;
-		}	
+		
+//		ArrayList<Integer> allowedIndexes = sharePreferences.getAllowedWords();						
+//		for(int index = 0; index < allowedIndexes.size(); index ++) {			
+//			chBoxStatusList.set(allowedIndexes.get(index), true);
+//			selectedCount += allowedIndexes.get(index) + 1;
+//		}	
 	}
 }
