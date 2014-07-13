@@ -9,6 +9,8 @@
         android:id="@+id/editText_new_word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
         android:ems="10" >
 
         <requestFocus />

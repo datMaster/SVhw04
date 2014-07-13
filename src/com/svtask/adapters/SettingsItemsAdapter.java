@@ -1,12 +1,12 @@
 package com.svtask.adapters;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import com.svtask.db.DBitem;
 import com.svtask.db.DBworker;
 import com.svtask.dialogs.AddWordDialog;
 import com.svtask.dialogs.LongClickDialog;
+import com.svtask.settings.Constants;
 import com.svtask.utils.SettingsViewHolder;
 import com.svtask2.R;
 
@@ -21,12 +21,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener, OnLongClickListener {	
 
 	private LayoutInflater inflater;
-//	private CharSequence[] words = null;
 	private ArrayList<SettingsViewHolder> holderList;
 	private ArrayList<Boolean> chBoxStatusList;
 	private int selectedCount = 0;
@@ -56,7 +54,6 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		longDialog.button_edit.setOnClickListener(this);
 		longDialog.button_delete.setOnClickListener(this);
 
-//		words = this.context.getResources().getTextArray(R.array.words);
 		holderList = new ArrayList<SettingsViewHolder>();
 		chBoxStatusList = new ArrayList<Boolean>();	
 		int wordsCount = dbItems.size();
@@ -151,7 +148,7 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 			break;
 		case R.id.button_edit_long_click_dialog : 
 			longDialog.closeDialog();
-			addDialog.setTitle(context.getResources().getString(R.string.dialog_edit_title));
+			addDialog.setLabels(Constants.DIALOG_EDIT);
 			addDialog.setWord(dbItems.get(longDialog.getItemId()).word);
 			addDialog.setEditFlag(true);
 			addDialog.setItemId(longDialog.getItemId());
@@ -159,7 +156,7 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 			break;
 		case R.id.button_delete_long_click_dialog : 
 			dbWorker.updateCheckedStatus(dbItems);
-			dbWorker.removeRecord(longDialog.getItemId());
+			dbWorker.removeRecord(dbItems.get(longDialog.getItemId()).id);
 			holderList.remove(longDialog.getItemId());
 			dbItems = dbWorker.getAllConvertedRecords();			
 			this.notifyDataSetChanged();
@@ -192,7 +189,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	public void selectAll() {
 		if (selectAllCount == selectedCount) {
 			unselectAll();
-		} else {
+		} 
+		else {
 			for (int i = 0; i < getCount(); i++) {
 				SettingsViewHolder holder = holderList.get(i);
 				if (holder.chBox != null) {
@@ -214,7 +212,7 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	}	
 	
 	public void addWord() {
-		addDialog.setTitle(context.getResources().getString(R.string.new_word));
+		addDialog.setLabels(Constants.DIALOG_ADD);
 		addDialog.showDialog();
 		addDialog.setEditFlag(false);
 	}

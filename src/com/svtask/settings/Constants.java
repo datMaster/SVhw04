@@ -10,4 +10,6 @@ public class Constants {
 	public static final Boolean LIVING = false;
 	public static final String SHAREDPREFERENCES_KEY = "selectedWords";
 	public static final String SHAREDPREFERENCES_APP_NAME = "com.svtask2.app";
+	public static final int DIALOG_ADD = 1;
+	public static final int DIALOG_EDIT = 2;
 }

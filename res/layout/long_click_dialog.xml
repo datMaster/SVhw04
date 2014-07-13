@@ -8,6 +8,8 @@
         android:id="@+id/textView_word_long_click_dialog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
         android:gravity="center_horizontal"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />

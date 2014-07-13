@@ -1,5 +1,6 @@
 package com.svtask.dialogs;
 
+import com.svtask.settings.Constants;
 import com.svtask2.R;
 
 import android.app.Dialog;
@@ -60,8 +61,18 @@ public class AddWordDialog {
 		newWord.setText("");
 	}
 	
-	public void setTitle(String title) {
-		dialog.setTitle(title);
+	public void setLabels(int select) {		
+		switch (select) {
+		case Constants.DIALOG_ADD:
+			dialog.setTitle(context.getResources().getString(R.string.new_word));
+			button_add.setText(context.getResources().getString(R.string.button_add));
+			break;
+
+		case Constants.DIALOG_EDIT:
+			dialog.setTitle(context.getResources().getString(R.string.dialog_edit_title));
+			button_add.setText(context.getResources().getString(R.string.button_edit));
+			break;
+		}				
 	}
 	
 	public void setWord(String word) {

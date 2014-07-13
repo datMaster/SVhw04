@@ -34,14 +34,12 @@ public class DBworker extends SQLiteOpenHelper {
 	}
 
 	private void insertNewRecord(ContentValues content) {
-		long result = dataBase.insert(DBconstants.TABLE_NAME, null, content);
-		int cc = 2;
+		dataBase.insert(DBconstants.TABLE_NAME, null, content);
 	}
 
 	public void addRecord(DBitem newItem) {
 		dataBase = getWritableDatabase();
 		ContentValues content = new ContentValues();
-//		content.put(DBconstants.ID_COL, newItem.id);
 		content.put(DBconstants.WORD_COL, newItem.word);
 		content.put(DBconstants.CHECKED_STATUS_COL, newItem.status);
 		insertNewRecord(content);
@@ -131,7 +129,6 @@ public class DBworker extends SQLiteOpenHelper {
 		for (int i = 0; i < words.length; i++) {
 			DBitem dbItem = new DBitem();
 			dbItem.word = words[i].toString();
-//			dbItem.id = i;
 			dbItem.status = DBconstants.INIT_CHECK_STATUS;
 			addRecord(dbItem);
 		}
