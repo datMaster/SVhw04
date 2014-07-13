@@ -16,6 +16,12 @@
     <string name="select_all">Select All</string>
     <string name="unselect_all">Unselect All</string>
     <string name="help_string">Available words not found! Select list of allowed words at settings.</string>
+    
+    <string name="button_edit">Edit</string>
+    <string name="button_add">Add</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="new_word">New word</string>
 
     <string-array name="words">
         <item>apple</item>

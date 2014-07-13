@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 
+import com.svtask.db.DBworker;
 import com.svtask.main.MainViewHolder;
 import com.svtask.settings.Constants;
 import com.svtask.utils.SharedPreferencesWorker;
@@ -20,23 +21,21 @@ import com.svtask2.R;
 public class GameLogic {
 	
 	private Activity activity;
-	private SharedPreferencesWorker sharedPrefences;
 	private MainViewHolder viewHolder;
-	private CharSequence[] words;
 	private Random rand;	
 	private CountDownTimer timer;
 	private Boolean isTimerStarted = false;
-	private ArrayList<Integer> allowedWordsIndexes;
+	private DBworker dbWorker;
+	private ArrayList<String> allowedWords;
 	
 	private int score;
-	private int lives;
+	private int lives;	
 	
 	public GameLogic (Activity activity, SharedPreferencesWorker sharedPrefences, MainViewHolder viewHolder) {
-		this.sharedPrefences = sharedPrefences;
 		this.viewHolder = viewHolder;
 		this.activity = activity;
-		this.words = activity.getResources().getTextArray(R.array.words);
-		this.rand = new Random();		
+		this.rand = new Random();
+		this.dbWorker = new DBworker(activity);
 		initializeSettings();
 		initGameLogic();
 	}
@@ -95,7 +94,7 @@ public class GameLogic {
 	
 	private boolean checkAllowedWords() {
 		updateAllowedWords();
-		if(allowedWordsIndexes.size() == 0) {
+		if(allowedWords.size() == 0) {
 			viewHolder.tvPleaseInputLabelHide();
 			viewHolder.tvRepeatUpdate(activity.getString(R.string.help_string));
 			viewHolder.etIputDisable();
@@ -109,7 +108,7 @@ public class GameLogic {
 	}
 	
 	private void updateAllowedWords() {
-		allowedWordsIndexes = sharedPrefences.getAllowedWords();
+		allowedWords = dbWorker.getAllowedWords();		
 	}
 	
 	private void reset() {
@@ -154,9 +153,9 @@ public class GameLogic {
 	
 	private void nextNeedString() {				
 		int id = 0;
-		if (allowedWordsIndexes.size() > 1)
-			id = rand.nextInt(allowedWordsIndexes.size() - 1);			
-		viewHolder.tvRepeatUpdate(words[allowedWordsIndexes.get(id)].toString());
+		if (allowedWords.size() > 1)
+			id = rand.nextInt(allowedWords.size() - 1);			
+		viewHolder.tvRepeatUpdate(allowedWords.get(id));//words[allowedWordsIndexes.get(id)].toString());
 	}
 	
 	private void stopTimer() {

@@ -1,14 +1,19 @@
 package com.svtask.adapters;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import com.svtask.db.DBitem;
 import com.svtask.db.DBworker;
+import com.svtask.dialogs.AddWordDialog;
 import com.svtask.utils.SettingsViewHolder;
-import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
+import android.R.dimen;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener {	
 
@@ -27,22 +33,25 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	private ArrayList<Boolean> chBoxStatusList;
 	private int selectedCount = 0;
 	private int selectAllCount = 0;		
-	private MenuItem selectAllMenuItem;	
-	private SharedPreferencesWorker sharePreferences;
+	private MenuItem selectAllMenuItem;		
 	private Context context;
 	
 	private DBworker dbWorker;
 	private ArrayList<DBitem> dbItems;
+	private AddWordDialog addDialog;
 	
-	public SettingsItemsAdapter(Context context, SharedPreferencesWorker sharePreferences) {
+	public SettingsItemsAdapter(Context context) {
 
 		this.context =  context;
 		inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		dbWorker = new DBworker(this.context);
 		dbItems = dbWorker.getAllConvertedRecords();
+		addDialog = new AddWordDialog(this.context);
+		addDialog.button_add.setOnClickListener(this);
+		addDialog.button_cancel.setOnClickListener(this);
 		
-		this.sharePreferences = sharePreferences;
+
 		words = this.context.getResources().getTextArray(R.array.words);
 		holderList = new ArrayList<SettingsViewHolder>();
 		chBoxStatusList = new ArrayList<Boolean>();	
@@ -53,7 +62,6 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 			holderList.add(new SettingsViewHolder());
 			chBoxStatusList.add(false);
 		}				
-		loadSharedPreferences();
 	}
 
 	public int getSelectCount() {
@@ -84,10 +92,10 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		SettingsViewHolder holder = holderList.get(position);		
 				
 		holder.tvWord = (TextView)convertView.findViewById(R.id.textView_item);		
-		holder.tvWord.setText(dbItems.get(position).word);// words[position]);
+		holder.tvWord.setText(dbItems.get(position).word);
 		
 		holder.chBox = (CheckBox)convertView.findViewById(R.id.checkBox_active_word);
-		holder.chBox.setChecked(dbItems.get(position).status); //chBoxStatusList.get(position));
+		holder.chBox.setChecked(dbItems.get(position).status);
 		holder.chBox.setTag(position);		
 		holder.chBox.setOnClickListener(this);	
 		
@@ -96,17 +104,39 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 
 	@Override
 	public void onClick(View v) {
-		int id = Integer.parseInt(v.getTag().toString());		
-		SettingsViewHolder holder = holderList.get(id);		
-//		chBoxStatusList.set(id, holder.chBox.isChecked());
-		dbItems.get(id).status = holder.chBox.isChecked();
-		if(holder.chBox.isChecked()) {			
-			selectedCount += (id + 1);
+		
+		switch (v.getId()) {
+		case R.id.button_add:
+			if(addDialog.getWord() != null) {
+				DBitem newItem = new DBitem();
+	//			newItem.id = dbItems.size();
+				newItem.word = addDialog.getWord();
+				newItem.status = false;							
+				dbWorker.addRecord(newItem);
+				dbWorker.updateCheckedStatus(dbItems);
+				dbItems = dbWorker.getAllConvertedRecords();
+				this.notifyDataSetChanged();
+			}
+			addDialog.closeDialog();
+			break;
+		case R.id.button_cancel:
+			addDialog.closeDialog();
+			break;
+		case R.id.checkBox_active_word: {
+			int id = Integer.parseInt(v.getTag().toString());
+			SettingsViewHolder holder = holderList.get(id);
+			dbItems.get(id).status = holder.chBox.isChecked();
+			if (holder.chBox.isChecked()) {
+				selectedCount += (id + 1);
+			} else {
+				selectedCount -= (id + 1);
+			}
+			checkSelected();
 		}
-		else {
-			selectedCount -= (id + 1);
+			break;
 		}
-		checkSelected();				
+		
+					
 	}
 	
 	public void checkSelected() {
@@ -125,7 +155,6 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 			if (holder.chBox != null) {
 				holder.chBox.setChecked(false);
 			}
-//			chBoxStatusList.set(i, false);
 			dbItems.get(i).status = false;
 		}
 		selectedCount = 0;
@@ -140,7 +169,6 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 				if (holder.chBox != null) {
 					holder.chBox.setChecked(true);
 				}
-//				chBoxStatusList.set(i, true);
 				dbItems.get(i).status = true;
 			}
 			selectedCount = selectAllCount;
@@ -153,16 +181,11 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	}
 	
 	public void saveSharedPreferences() {
-//		sharePreferences.saveSharedPreferences(chBoxStatusList);
 		dbWorker.updateCheckedStatus(dbItems);
-	}
+	}	
 	
-	public void loadSharedPreferences() {
-		
-//		ArrayList<Integer> allowedIndexes = sharePreferences.getAllowedWords();						
-//		for(int index = 0; index < allowedIndexes.size(); index ++) {			
-//			chBoxStatusList.set(allowedIndexes.get(index), true);
-//			selectedCount += allowedIndexes.get(index) + 1;
-//		}	
+	public void addWord() {
+		addDialog.showDialog();	
+
 	}
 }

@@ -1,11 +1,9 @@
 package com.svtask.settings;
 
 import com.svtask.adapters.SettingsItemsAdapter;
-import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -19,19 +17,16 @@ import android.widget.ListView;
 public class SettingsActivity extends ActionBarActivity {
 
 	private static ListView wordsList;	
-	private static SettingsItemsAdapter settingsAdapter;
-	private SharedPreferencesWorker sharePreferences;
+	private static SettingsItemsAdapter settingsAdapter;	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-		
-		sharePreferences = new SharedPreferencesWorker(getSharedPreferences(Constants.SHAREDPREFERENCES_APP_NAME, 
-				Context.MODE_PRIVATE));
+				
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment(sharePreferences)).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}						
 		
 		ActionBar abar = getSupportActionBar();
@@ -70,6 +65,11 @@ public class SettingsActivity extends ActionBarActivity {
 			settingsAdapter.selectAll();			
 			break;
 		}
+		
+		case R.id.add_word: {
+			settingsAdapter.addWord();			
+			break;
+		}
 			
 		default:
 			break;
@@ -87,10 +87,8 @@ public class SettingsActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
-		private static SharedPreferencesWorker sharedPreferences;
-		public PlaceholderFragment(SharedPreferencesWorker sharedPreferences) {
-			PlaceholderFragment.sharedPreferences = sharedPreferences;
+	public static class PlaceholderFragment extends Fragment {		
+		public PlaceholderFragment() {			
 		}
 
 		@Override
@@ -99,7 +97,7 @@ public class SettingsActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_settings, container, false);			
 			
 			wordsList = (ListView)rootView.findViewById(R.id.listView_settings);			
-			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity(), sharedPreferences);
+			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity());
 			wordsList.setAdapter(settingsAdapter);
 									
 			return rootView;
