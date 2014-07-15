@@ -9,17 +9,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.svtask.logic.GameLogic;
-import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 public class MainPlaceHolderFragment extends Fragment {
 		
 	private MainViewHolder viewHolder;
-	private SharedPreferencesWorker sharedPrefences;
 	private GameLogic gameLogic;
 	
-	public MainPlaceHolderFragment(SharedPreferencesWorker sharedPref) {
-		sharedPrefences = sharedPref;
+	public MainPlaceHolderFragment() {
+
 	}
 
 	@Override
@@ -34,7 +32,7 @@ public class MainPlaceHolderFragment extends Fragment {
 		viewHolder.setTvEntered((TextView)rootView.findViewById(R.id.textView_entered));
 		viewHolder.setTvRepeat((TextView)rootView.findViewById(R.id.textView_need_word));
 		viewHolder.setTvTimer((TextView)rootView.findViewById(R.id.textView_timer));
-		gameLogic = new GameLogic(getActivity(), sharedPrefences, viewHolder);
+		gameLogic = new GameLogic(getActivity(), viewHolder);
 		
 		return rootView;
 	}

@@ -1,9 +1,5 @@
 package com.svtask.main;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,7 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.svtask.settings.Constants;
-import com.svtask.utils.SharedPreferencesWorker;
 
 public class MainViewHolder {
 	private EditText etInput;

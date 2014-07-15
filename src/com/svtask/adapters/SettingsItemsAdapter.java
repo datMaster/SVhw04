@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import com.svtask.db.DBitem;
 import com.svtask.db.DBworker;
-import com.svtask.dialogs.AddWordDialog;
-import com.svtask.dialogs.LongClickDialog;
-import com.svtask.settings.Constants;
+import com.svtask.dialogs.DialogWorker;
 import com.svtask.utils.SettingsViewHolder;
 import com.svtask2.R;
 
@@ -34,26 +32,15 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	
 	private DBworker dbWorker;
 	private ArrayList<DBitem> dbItems;
-	private AddWordDialog addDialog;
-	private LongClickDialog longDialog;
+	private DialogWorker dialogWorker;
 	
 	public SettingsItemsAdapter(Context context) {
-
 		this.context =  context;
 		inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		dbWorker = new DBworker(this.context);
-		dbItems = dbWorker.getAllConvertedRecords();
-		
-		addDialog = new AddWordDialog(this.context);
-		addDialog.button_add.setOnClickListener(this);
-		addDialog.button_cancel.setOnClickListener(this);
-		
-		longDialog = new LongClickDialog(this.context);
-		longDialog.button_cancel.setOnClickListener(this);
-		longDialog.button_edit.setOnClickListener(this);
-		longDialog.button_delete.setOnClickListener(this);
-
+		dbWorker = new DBworker(this.context);		
+		dbItems = dbWorker.getAllConvertedRecords();		
+		dialogWorker = new DialogWorker(this.context, this);		
 		holderList = new ArrayList<SettingsViewHolder>();
 		chBoxStatusList = new ArrayList<Boolean>();	
 		int wordsCount = dbItems.size();
@@ -62,6 +49,8 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		for (int i = 0; i < dbItems.size(); i++) {			
 			holderList.add(new SettingsViewHolder());
 			chBoxStatusList.add(false);
+			if(dbItems.get(i).status)
+				selectedCount += i + 1;
 		}				
 	}
 
@@ -109,14 +98,13 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		
 		switch (v.getId()) {
 		case R.id.button_add:
-			if(addDialog.getWord() != null) {
-				if(addDialog.getEditFlag()) {
-					if(addDialog.getWord() != null)
-						dbItems.get(addDialog.getItemId()).word = addDialog.getWord();					
+			if(dialogWorker.getNewWord() != null) {
+				if(dialogWorker.getEditFlag()) {					
+						dbItems.get(dialogWorker.getItemId()).word = dialogWorker.getNewWord();					
 				}
 				else {
 					DBitem newItem = new DBitem();
-					newItem.word = addDialog.getWord();
+					newItem.word = dialogWorker.getNewWord();
 					newItem.status = false;							
 					dbWorker.addRecord(newItem);
 					dbWorker.updateCheckedStatus(dbItems);
@@ -124,12 +112,11 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 					holderList.add(new SettingsViewHolder());
 				}
 				this.notifyDataSetChanged();
-			}
-			
-			addDialog.closeDialog();
+			}			
+			dialogWorker.closeAddDialog();
 			break;
 		case R.id.button_cancel:
-			addDialog.closeDialog();
+			dialogWorker.closeAddDialog();
 			break;
 		case R.id.checkBox_active_word: {
 			int id = Integer.parseInt(v.getTag().toString());
@@ -144,23 +131,19 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		}
 			break;
 		case R.id.button_cancel_long_click_dialog : 
-			longDialog.closeDialog();
+			dialogWorker.closeLongClickDialog();
 			break;
 		case R.id.button_edit_long_click_dialog : 
-			longDialog.closeDialog();
-			addDialog.setLabels(Constants.DIALOG_EDIT);
-			addDialog.setWord(dbItems.get(longDialog.getItemId()).word);
-			addDialog.setEditFlag(true);
-			addDialog.setItemId(longDialog.getItemId());
-			addDialog.showDialog();
+			dialogWorker.closeLongClickDialog();
+			dialogWorker.showEditDialog();
 			break;
 		case R.id.button_delete_long_click_dialog : 
 			dbWorker.updateCheckedStatus(dbItems);
-			dbWorker.removeRecord(dbItems.get(longDialog.getItemId()).id);
-			holderList.remove(longDialog.getItemId());
+			dbWorker.removeRecord(dbItems.get(dialogWorker.getRemoveItemId()).id);
+			holderList.remove(dialogWorker.getRemoveItemId());
 			dbItems = dbWorker.getAllConvertedRecords();			
 			this.notifyDataSetChanged();
-			longDialog.closeDialog();
+			dialogWorker.closeLongClickDialog();
 			break;
 		}							
 	}
@@ -171,8 +154,7 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 		} 
 		else {
 			selectAllMenuItem.setTitle(context.getResources().getString(R.string.select_all));
-		}
-			
+		}			
 	}
 	
 	private void unselectAll() {
@@ -205,6 +187,7 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	
 	public void setMenu(Menu menu) {
 		selectAllMenuItem = menu.findItem(R.id.select_all);
+		checkSelected();
 	}
 	
 	public void saveWordsToDB() {
@@ -212,17 +195,13 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	}	
 	
 	public void addWord() {
-		addDialog.setLabels(Constants.DIALOG_ADD);
-		addDialog.showDialog();
-		addDialog.setEditFlag(false);
+		dialogWorker.showAddDialog();
 	}
 
 	@Override
 	public boolean onLongClick(View v) {		
 		int position = Integer.parseInt(v.getTag().toString());
-		longDialog.setItemId(position);
-		longDialog.setDialogWord(dbItems.get(position).word);
-		longDialog.showDialog();
+		dialogWorker.showLongClickDialog(dbItems.get(position).word, position);
 		return false;
 	}
 }

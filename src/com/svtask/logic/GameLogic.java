@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.svtask.db.DBworker;
 import com.svtask.main.MainViewHolder;
 import com.svtask.settings.Constants;
-import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 public class GameLogic {
@@ -31,7 +30,7 @@ public class GameLogic {
 	private int score;
 	private int lives;	
 	
-	public GameLogic (Activity activity, SharedPreferencesWorker sharedPrefences, MainViewHolder viewHolder) {
+	public GameLogic (Activity activity, MainViewHolder viewHolder) {
 		this.viewHolder = viewHolder;
 		this.activity = activity;
 		this.rand = new Random();

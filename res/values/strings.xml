@@ -24,6 +24,7 @@
     <string name="new_word">Add word</string>
     <string name="long_click_dialog_title">Select action</string>
     <string name="dialog_edit_title">Edit word</string>
+    <string name="empty_word">Empty input!</string>
 
     <string-array name="words">
         <item>apple</item>

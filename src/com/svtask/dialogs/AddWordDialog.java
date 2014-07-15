@@ -15,7 +15,6 @@ public class AddWordDialog {
 	private Context context;
 	private EditText newWord;
 	private boolean editFlag;
-	private int itemId;
 	
 	public Button button_add;
 	public Button button_cancel;
@@ -46,7 +45,7 @@ public class AddWordDialog {
 	
 	public String getWord() {
 		if(newWord.getText().toString() == null) {
-			Toast.makeText(context, "Word is null", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, context.getResources().getString(R.string.empty_word), Toast.LENGTH_LONG).show();
 			return null;
 		}		
 		return newWord.getText().toString();
@@ -77,14 +76,6 @@ public class AddWordDialog {
 	
 	public void setWord(String word) {
 		newWord.setText(word);
-	}
-	
-	public void setItemId(int id) {
-		itemId = id;
-	}
-	
-	public int getItemId() {
-		return itemId;
 	}
 		
 }

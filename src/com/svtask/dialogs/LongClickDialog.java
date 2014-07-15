@@ -12,7 +12,6 @@ public class LongClickDialog {
 	private Dialog dialog;
 	private Context context;
 	private TextView tvWord;
-	private int itemId;
 	
 	public Button button_cancel;
 	public Button button_edit;
@@ -43,11 +42,7 @@ public class LongClickDialog {
 		tvWord.setText(word);
 	}
 	
-	public void setItemId(int id) {
-		itemId = id;
-	}
-	
-	public int getItemId() {
-		return itemId;
+	public String getWord() {
+		return tvWord.getText().toString();
 	}
 }
